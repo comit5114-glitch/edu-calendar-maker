@@ -3,7 +3,7 @@ import { Course, BasicInfo, CustomImage } from './types';
 import Sidebar from './components/Sidebar';
 import Preview from './components/Preview';
 import { Download, Printer, FileDown } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import * as htmlToImage from 'html-to-image';
 import { jsPDF } from 'jspdf';
 
 const initialBasicInfo: BasicInfo = {
@@ -94,33 +94,52 @@ export default function App() {
     }
   };
 
-  const captureCanvas = async () => {
+  const captureCanvasUrl = async () => {
     const el = document.getElementById('document-canvas');
     if (!el) return null;
-    // For 300dpi, we scale 1 because our CSS layout is already huge (2480x3508 or 3508x2480)
-    const canvas = await html2canvas(el, { scale: 1, useCORS: true });
-    return canvas;
+    
+    // ignore elements with data-html2canvas-ignore="true" for backward compatibility
+    const filter = (node: HTMLElement) => {
+      if (node.dataset && node.dataset.html2canvasIgnore === 'true') {
+        return false;
+      }
+      return true;
+    };
+
+    try {
+      const dataUrl = await htmlToImage.toPng(el, { 
+        filter: filter as any,
+        backgroundColor: 'transparent',
+        pixelRatio: 1 // Keep scale 1 since it's already huge
+      });
+      return dataUrl;
+    } catch (e) {
+      console.error('oops, something went wrong!', e);
+      alert('이미지 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      return null;
+    }
   };
 
   const handleExportPNG = async () => {
-    const canvas = await captureCanvas();
-    if (!canvas) return;
+    const dataUrl = await captureCanvasUrl();
+    if (!dataUrl) return;
     const link = document.createElement('a');
     link.download = `${basicInfo.year}년_${basicInfo.month}월_교육일정.png`;
-    link.href = canvas.toDataURL('image/png', 1.0);
+    link.href = dataUrl;
     link.click();
   };
 
   const handleExportPDF = async () => {
-    const canvas = await captureCanvas();
-    if (!canvas) return;
-    const imgData = canvas.toDataURL('image/png', 1.0);
+    const dataUrl = await captureCanvasUrl();
+    if (!dataUrl) return;
+    
+    const el = document.getElementById('document-canvas');
     const pdf = new jsPDF({
       orientation: basicInfo.orientation,
       unit: 'px',
-      format: [canvas.width, canvas.height]
+      format: [el!.offsetWidth, el!.offsetHeight]
     });
-    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.addImage(dataUrl, 'PNG', 0, 0, el!.offsetWidth, el!.offsetHeight);
     pdf.save(`${basicInfo.year}년_${basicInfo.month}월_교육일정.pdf`);
   };
 
