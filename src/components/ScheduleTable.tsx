@@ -130,7 +130,7 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
                   {/* Left Side */}
                   {leftCourse ? (
                     <>
-                      <td className="course-name" style={{ fontWeight: 800, color: leftCourse.color || undefined, ...basicInfo.courseNameStyle }}>
+                      <td className="course-name" style={{ fontWeight: 800, ...basicInfo.courseNameStyle, ...(leftCourse.color ? { color: leftCourse.color } : {}) }}>
                         <span dangerouslySetInnerHTML={{ __html: leftCourse.name }} />
                       </td>
                       <td className="course-schedule" style={{ ...basicInfo.courseScheduleStyle }}>
@@ -148,7 +148,7 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
                   {/* Right Side */}
                   {rightCourse ? (
                     <>
-                      <td className="course-name" style={{ fontWeight: 800, color: rightCourse.color || undefined, borderLeft: '3px solid #475569', ...basicInfo.courseNameStyle }}>
+                      <td className="course-name" style={{ fontWeight: 800, borderLeft: '3px solid #475569', ...basicInfo.courseNameStyle, ...(rightCourse.color ? { color: rightCourse.color } : {}) }}>
                         <span dangerouslySetInnerHTML={{ __html: rightCourse.name }} />
                       </td>
                       <td className="course-schedule" style={{ ...basicInfo.courseScheduleStyle }}>

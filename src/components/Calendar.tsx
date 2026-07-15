@@ -1,7 +1,6 @@
 import React from 'react';
 import { BasicInfo, Course } from '../types';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format, isSameMonth, isSameDay, parseISO } from 'date-fns';
-import { QRCodeSVG } from 'qrcode.react';
 import { MapPin, Clock, CalendarDays } from 'lucide-react';
 
 interface CalendarProps {
@@ -149,7 +148,7 @@ export default function Calendar({ basicInfo, courses, holidays, setHolidays }: 
                             <div 
                               key={course.id} 
                               className={pillClass} 
-                              style={{ backgroundColor: course.color, color: '#000', ...basicInfo.courseNameStyle }}
+                              style={{ backgroundColor: course.color, ...basicInfo.courseNameStyle, ...(basicInfo.courseNameStyle?.color ? {} : { color: '#000' }) }}
                               title={`${course.name} (${course.time})`}
                             >
                               {label}

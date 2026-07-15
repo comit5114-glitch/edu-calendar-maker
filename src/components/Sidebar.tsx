@@ -111,7 +111,7 @@ export default function Sidebar({ basicInfo, setBasicInfo, courses, setCourses, 
     e.target.value = '';
   };
 
-  const handleStyleChange = (field: keyof BasicInfo, prop: 'color' | 'fontFamily', value: string) => {
+  const handleStyleChange = (field: keyof BasicInfo, prop: 'color' | 'fontFamily' | 'backgroundColor' | 'fontSize', value: string) => {
     setBasicInfo(prev => ({
       ...prev,
       [field]: {
