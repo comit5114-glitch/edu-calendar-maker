@@ -281,19 +281,48 @@ export default function Sidebar({ basicInfo, setBasicInfo, courses, setCourses, 
   };
 
   const recommendContent = async (courseId: string, courseName: string) => {
-    // 1. OpenAI API를 통한 자동 추천 시도
-    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    // 1. AI API를 통한 자동 추천 시도 (Gemini 또는 OpenAI)
+    const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const openApiKey = import.meta.env.VITE_OPENAI_API_KEY;
     
-    if (apiKey) {
+    if (geminiApiKey) {
       try {
-        // 로딩 상태 표시
         updateCourse(courseId, { contents: ['AI가 추천 중입니다... 잠시만 기다려주세요.'] });
-        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `당신은 디지털 배움터 강사입니다. 주어진 교육명에 맞는 4~5줄의 실습 위주 교육 내용을 추천해주세요. 각 줄은 간결하게 작성하고, 숫자나 불릿 기호 없이 텍스트만 나열해주세요.\n\n교육명: ${courseName}\n위 교육명에 맞는 커리큘럼(내용)을 4~5줄로 작성해줘.`
+              }]
+            }],
+            generationConfig: { temperature: 0.7 }
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const contentStr = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const newContents = contentStr.split('\n').map((s: string) => s.replace(/^[-*•\d.]\s*/, '').trim()).filter(Boolean);
+          updateCourse(courseId, { contents: newContents.slice(0, 5) });
+          return;
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          alert("제미나이 API 응답 에러: " + JSON.stringify(errorData));
+        }
+      } catch (error: any) {
+        console.error('Gemini API Error:', error);
+        alert("제미나이 API 네트워크 에러: " + error.message);
+      }
+    } else if (openApiKey) {
+      try {
+        updateCourse(courseId, { contents: ['AI가 추천 중입니다... 잠시만 기다려주세요.'] });
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
+            'Authorization': `Bearer ${openApiKey}`
           },
           body: JSON.stringify({
             model: 'gpt-4o-mini',
@@ -314,7 +343,6 @@ export default function Sidebar({ basicInfo, setBasicInfo, courses, setCourses, 
         }
       } catch (error) {
         console.error('OpenAI API Error:', error);
-        // 에러 발생 시 기존 로직으로 폴백하기 위해 진행
       }
     }
 
@@ -346,8 +374,8 @@ export default function Sidebar({ basicInfo, setBasicInfo, courses, setCourses, 
 
     if (!found) {
       updateCourse(courseId, { contents: ['저장된 템플릿이 없습니다. 직접 입력해주세요.'] });
-      if (!apiKey) {
-        alert("버셀(Vercel) 환경 변수에 VITE_OPENAI_API_KEY를 등록하시면 AI가 어떤 교육명이든 자동으로 내용을 만들어줍니다!");
+      if (!geminiApiKey && !openApiKey) {
+        alert("버셀(Vercel) 환경 변수에 VITE_GEMINI_API_KEY 또는 VITE_OPENAI_API_KEY를 등록하시면 AI가 어떤 교육명이든 자동으로 내용을 만들어줍니다!");
       }
     }
   };
