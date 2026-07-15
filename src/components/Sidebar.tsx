@@ -288,7 +288,7 @@ export default function Sidebar({ basicInfo, setBasicInfo, courses, setCourses, 
     if (geminiApiKey) {
       try {
         updateCourse(courseId, { contents: ['AI가 추천 중입니다... 잠시만 기다려주세요.'] });
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey.trim()}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
