@@ -1,0 +1,1 @@
+﻿ = New-Object -comObject WScript.Shell;  = .CreateShortcut('C:\Users\comit\Desktop\AI 디지털배움터 교육시간표 생성기.lnk'); .TargetPath = 'C:\Users\comit\Desktop\교육일정표_자동제작.exe'; .IconLocation = 'C:\Users\comit\안티그래비티폴더\edu-calendar-maker\app.ico'; .Save()
