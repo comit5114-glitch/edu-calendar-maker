@@ -386,13 +386,13 @@ export default function Sidebar({
       if (geminiApiKey) {
       try {
         updateCourse(courseId, { contents: ['AI가 추천 중입니다... 잠시만 기다려주세요.'] });
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey.trim()}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey.trim()}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{
               parts: [{
-                text: `당신은 디지털 배움터 강사입니다. 주어진 교육명에 맞는 4개의 실습 위주 교육 내용을 추천해주세요. 각 줄은 간결하게 작성하고, 반드시 지정된 JSON 형식으로 반환하세요.\n\n교육명: ${courseName}`
+                text: `당신은 디지털 배움터 강사입니다. 주어진 교육명에 맞는 1개의 핵심 실습 위주 교육 내용을 추천해주세요. 반드시 지정된 JSON 형식으로 반환하세요.\n\n교육명: ${courseName}`
               }]
             }],
             generationConfig: { 
@@ -423,7 +423,7 @@ export default function Sidebar({
         try {
           const parsed = JSON.parse(responseText);
           if (parsed.contents && Array.isArray(parsed.contents)) {
-            updateCourse(courseId, { contents: parsed.contents.slice(0, 4) });
+            updateCourse(courseId, { contents: parsed.contents.slice(0, 1) });
           } else {
             throw new Error('응답에 contents 배열이 없습니다.');
           }
@@ -457,8 +457,8 @@ export default function Sidebar({
           body: JSON.stringify({
             model: 'gpt-4o-mini',
             messages: [
-              { role: 'system', content: '당신은 디지털 배움터 강사입니다. 주어진 교육명에 맞는 4~5줄의 실습 위주 교육 내용을 추천해주세요. 각 줄은 간결하게 작성하고, 숫자나 불릿 기호 없이 텍스트만 나열해주세요.' },
-              { role: 'user', content: `교육명: ${courseName}\n위 교육명에 맞는 커리큘럼(내용)을 4~5줄로 작성해줘.` }
+              { role: 'system', content: '당신은 디지털 배움터 강사입니다. 주어진 교육명에 맞는 1줄의 핵심 실습 위주 교육 내용을 추천해주세요. 숫자나 불릿 기호 없이 텍스트만 작성해주세요.' },
+              { role: 'user', content: `교육명: ${courseName}\n위 교육명에 맞는 커리큘럼(내용)을 1줄로 작성해줘.` }
             ],
             temperature: 0.7
           })
@@ -468,7 +468,7 @@ export default function Sidebar({
           const data = await response.json();
           const contentStr = data.choices[0].message.content;
           const newContents = contentStr.split('\n').map((s: string) => s.replace(/^[-*•\d.]\s*/, '').trim()).filter(Boolean);
-          updateCourse(courseId, { contents: newContents.slice(0, 5) });
+          updateCourse(courseId, { contents: newContents.slice(0, 1) });
           return;
         }
       } catch (error) {
@@ -482,22 +482,21 @@ export default function Sidebar({
     
     for (const [key, contents] of Object.entries(mockRecommendations)) {
       if (lowerName.includes(key.toLowerCase())) {
-        updateCourse(courseId, { contents });
+        updateCourse(courseId, { contents: contents.slice(0, 1) });
         found = true;
         break;
       }
     }
     
-    // 추가 키워드 매칭
     if (!found) {
       if (lowerName.includes('ai') || courseName.includes('생성형')) {
-        updateCourse(courseId, { contents: ['생성형 AI의 개념과 활용 분야', '챗GPT로 텍스트 생성하기', '미드저니/달리로 이미지 생성', '나만의 AI 디자인 콘텐츠 완성'] });
+        updateCourse(courseId, { contents: ['생성형 AI의 개념과 활용 분야'] });
         found = true;
       } else if (courseName.includes('디자인') || courseName.includes('캔바') || courseName.includes('미리캔버스')) {
-        updateCourse(courseId, { contents: ['디자인 툴 기본 화면 이해하기', '템플릿을 활용한 디자인 수정', '텍스트와 이미지 배치하기', '완성된 디자인 저장 및 공유'] });
+        updateCourse(courseId, { contents: ['디자인 툴 기본 화면 이해하기'] });
         found = true;
       } else if (courseName.includes('영상') || courseName.includes('유튜브') || courseName.includes('캡컷') || courseName.includes('동영상')) {
-        updateCourse(courseId, { contents: ['영상 편집 기초 이해하기', '컷 편집과 자막 넣기', '배경음악과 효과음 추가하기', '완성된 영상 추출하고 공유하기'] });
+        updateCourse(courseId, { contents: ['영상 편집 기초 이해하기'] });
         found = true;
       }
     }
@@ -574,7 +573,12 @@ export default function Sidebar({
               <div key={day.toISOString()} 
                    onClick={() => {
                      const newDateText = `${format(day, 'M월 d일')}부터 (첫 교육 시 회원가입 필요)`;
-                     setBasicInfo(prev => ({ ...prev, dateText: newDateText }));
+                     setBasicInfo(prev => ({ 
+                       ...prev, 
+                       dateText: newDateText,
+                       month: day.getMonth() + 1,
+                       year: day.getFullYear()
+                     }));
                    }}
                    style={{ 
                 padding: '6px 0', 

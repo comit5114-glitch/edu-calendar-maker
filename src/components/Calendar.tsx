@@ -2,6 +2,7 @@ import React from 'react';
 import { BasicInfo, Course } from '../types';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format, isSameMonth, isSameDay, parseISO, differenceInDays } from 'date-fns';
 import { MapPin, Clock, CalendarDays } from 'lucide-react';
+import { isKoreanHoliday } from '../utils/holidays';
 
 const ArrowLeft = ({ color }: { color: string }) => (
   <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '12px' }}>
@@ -71,7 +72,7 @@ export default function Calendar({ basicInfo, courses, holidays, setHolidays }: 
                 <div style={{ backgroundColor: '#fff', color: '#1e40af', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <MapPin size={32} strokeWidth={3} />
                 </div>
-                {basicInfo.addressDetail}
+                영도구청 4층 정보화교육장
               </div>
             )}
             {basicInfo.time && (
@@ -112,7 +113,7 @@ export default function Calendar({ basicInfo, courses, holidays, setHolidays }: 
                   const isCurrentMonth = isSameMonth(day, monthStart);
                   const isSun = dayIndex === 0;
                   const isSat = dayIndex === 6;
-                  const isHoliday = holidays.includes(dayStr);
+                  const isHoliday = holidays.includes(dayStr) || isKoreanHoliday(dayStr);
                   
                   // Find courses for this day
                   const dayCourses = courses.filter(c => {
@@ -128,6 +129,7 @@ export default function Calendar({ basicInfo, courses, holidays, setHolidays }: 
                         className={`calendar-date ${isSun ? 'sunday' : ''} ${isSat ? 'saturday' : ''} ${isHoliday ? 'holiday' : ''}`}
                         onClick={() => toggleHoliday(dayStr)}
                         title="클릭하여 공휴일 지정/해제"
+                        style={{ color: (isHoliday || isSun) ? '#dc2626' : isSat ? '#2563eb' : 'inherit' }}
                       >
                         {format(day, 'd')}
                       </div>

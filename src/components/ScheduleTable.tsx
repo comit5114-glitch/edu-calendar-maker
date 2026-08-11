@@ -47,7 +47,7 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
             <span style={{ color: '#0f172a' }}>교육과정 안내</span>
           </h1>
         </div>
-        <div style={{ border: '4px solid #bfdbfe', borderRadius: '999px', padding: '16px 48px', color: '#1e3a8a', fontWeight: 800, fontSize: '36px', backgroundColor: 'white', alignSelf: 'flex-start', marginTop: '20px' }}>
+        <div style={{ border: '4px solid #bfdbfe', borderRadius: '999px', padding: '24px 64px 16px 64px', color: '#1e3a8a', fontWeight: 800, fontSize: '40px', backgroundColor: 'white', alignSelf: 'flex-start', marginTop: '20px', display: 'flex', alignItems: 'center', position: 'relative', zIndex: 50 }}>
           ✨ {basicInfo.targetAudience}
         </div>
       </div>
@@ -66,7 +66,7 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
               <div className="info-row">
                 <div className="info-label" style={basicInfo.infoLabelStyle}>교육장소</div>
                 <div className="info-value" style={basicInfo.infoValueStyle}>
-                  {basicInfo.addressDetail}
+                  영도구청 4층 정보화교육장
                 </div>
               </div>
               <div className="info-row">
@@ -92,7 +92,7 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
         
         {/* Right Column: Header Illustration */}
         <div style={{ position: 'relative', width: '1000px', flexShrink: 0, display: 'flex', justifyContent: 'flex-end', marginTop: '-350px', marginRight: '-40px' }}>
-          <img src="/header-illustration.jpg" alt="Header Illustration" style={{ width: '100%', height: 'auto', objectFit: 'contain', zIndex: -1 }} />
+          <img src="/header-illustration.jpg" alt="Header Illustration" style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
         </div>
 
       </div>
@@ -103,11 +103,11 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
           <thead>
             <tr style={{ backgroundColor: basicInfo.tableHeaderStyle?.backgroundColor || '#fff0e6' }}>
               <th style={{ width: '15%', ...basicInfo.tableHeaderStyle }}>교육명</th>
-              <th style={{ width: '15%', ...basicInfo.tableHeaderStyle }}>교육일정</th>
-              <th style={{ width: '20%', ...basicInfo.tableHeaderStyle }}>교육내용</th>
-              <th style={{ width: '15%', borderLeft: '3px solid #475569', ...basicInfo.tableHeaderStyle }}>교육명</th>
-              <th style={{ width: '15%', ...basicInfo.tableHeaderStyle }}>교육일정</th>
-              <th style={{ width: '20%', ...basicInfo.tableHeaderStyle }}>교육내용</th>
+              <th style={{ width: '12%', ...basicInfo.tableHeaderStyle }}>교육일정</th>
+              <th style={{ width: '23%', ...basicInfo.tableHeaderStyle }}>교육내용</th>
+              <th style={{ width: '15%', borderLeft: '3px solid #000', ...basicInfo.tableHeaderStyle }}>교육명</th>
+              <th style={{ width: '12%', ...basicInfo.tableHeaderStyle }}>교육일정</th>
+              <th style={{ width: '23%', ...basicInfo.tableHeaderStyle }}>교육내용</th>
             </tr>
           </thead>
           <tbody>
@@ -119,15 +119,15 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
                   {/* Left Side */}
                   {leftCourse ? (
                     <>
-                      <td className="course-name" style={{ fontWeight: 800, ...basicInfo.courseNameStyle, ...(leftCourse.color ? { color: leftCourse.color } : {}) }}>
+                      <td className="course-name" style={{ fontWeight: 800, ...basicInfo.courseNameStyle }}>
                         <span dangerouslySetInnerHTML={{ __html: leftCourse.name }} />
                       </td>
                       <td className="course-schedule" style={{ ...basicInfo.courseScheduleStyle }}>
                         {formatDateRange(leftCourse.startDate, leftCourse.endDate)}
                       </td>
                       <td className="course-content" style={{ textAlign: 'left', paddingLeft: '24px', ...basicInfo.courseContentStyle }}>
-                        <ul style={{ margin: 0, paddingLeft: '24px', listStyleType: 'disc' }}>
-                          {leftCourse.contents.map((c, j) => <li key={j} style={{ marginBottom: '8px' }}>{c}</li>)}
+                        <ul style={{ margin: 0, paddingLeft: '24px', listStyleType: 'disc', lineHeight: 1.4 }}>
+                          {leftCourse.contents.map((c, j) => <li key={j} style={{ marginBottom: '4px' }}>{c}</li>)}
                         </ul>
                       </td>
                     </>
@@ -137,20 +137,20 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
                   {/* Right Side */}
                   {rightCourse ? (
                     <>
-                      <td className="course-name" style={{ fontWeight: 800, borderLeft: '3px solid #475569', ...basicInfo.courseNameStyle, ...(rightCourse.color ? { color: rightCourse.color } : {}) }}>
+                      <td className="course-name" style={{ fontWeight: 800, borderLeft: '3px solid #000', ...basicInfo.courseNameStyle }}>
                         <span dangerouslySetInnerHTML={{ __html: rightCourse.name }} />
                       </td>
                       <td className="course-schedule" style={{ ...basicInfo.courseScheduleStyle }}>
                         {formatDateRange(rightCourse.startDate, rightCourse.endDate)}
                       </td>
                       <td className="course-content" style={{ textAlign: 'left', paddingLeft: '24px', ...basicInfo.courseContentStyle }}>
-                        <ul style={{ margin: 0, paddingLeft: '24px', listStyleType: 'disc' }}>
-                          {rightCourse.contents.map((c, j) => <li key={j} style={{ marginBottom: '8px' }}>{c}</li>)}
+                        <ul style={{ margin: 0, paddingLeft: '24px', listStyleType: 'disc', lineHeight: 1.4 }}>
+                          {rightCourse.contents.map((c, j) => <li key={j} style={{ marginBottom: '4px' }}>{c}</li>)}
                         </ul>
                       </td>
                     </>
                   ) : (
-                    <><td style={{ borderLeft: '3px solid #475569' }} /><td /><td /></>
+                    <><td style={{ borderLeft: '3px solid #000' }} /><td /><td /></>
                   )}
                 </tr>
               );
@@ -160,10 +160,10 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
       </div>
 
       {/* FOOTER SECTION */}
-      <div className="doc-footer" style={{ marginTop: 'auto', border: 'none', padding: '0', backgroundColor: 'transparent', display: 'flex', justifyContent: 'flex-start', alignItems: 'stretch', gap: '80px' }}>
+      <div className="doc-footer" style={{ marginTop: 'auto', border: 'none', padding: '0', backgroundColor: 'transparent', display: 'flex', justifyContent: 'space-between', alignItems: 'stretch', gap: '40px' }}>
         
         {/* QR codes & Text inside a blue border box on the left */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', border: '6px solid var(--primary)', borderRadius: '24px', padding: '32px', alignItems: 'center' }}>
+        <div style={{ width: '700px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '24px', border: '6px solid var(--primary)', borderRadius: '24px', padding: '32px', alignItems: 'center', alignSelf: 'flex-end' }}>
           
           <div style={{ display: 'flex', gap: '32px' }}>
             {/* 고정된 첫 번째 QR 코드 */}
@@ -209,8 +209,8 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
         </div>
 
         {/* Right side banner image */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingLeft: '20px' }}>
-          <img src="/footer-illustration.jpg" alt="Footer Illustration" style={{ width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain' }} />
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+          <img src="/footer-illustration.jpg" alt="Footer Illustration" style={{ width: '100%', height: '342px', objectFit: 'contain' }} />
         </div>
 
       </div>

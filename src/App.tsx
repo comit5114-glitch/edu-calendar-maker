@@ -28,9 +28,9 @@ const initialBasicInfo: BasicInfo = {
   infoLabelStyle: { color: '#ffffff', fontFamily: 'Pretendard' },
   infoValueStyle: { color: '#0f172a', fontFamily: 'Pretendard' },
   tableHeaderStyle: { color: '#0f172a', fontFamily: 'Pretendard', backgroundColor: '#fff0e6' },
-  courseNameStyle: { color: '#1e40af', fontFamily: 'Pretendard', fontSize: '12px' },
-  courseScheduleStyle: { color: '#0f172a', fontFamily: 'Pretendard', fontSize: '12px' },
-  courseContentStyle: { color: '#0f172a', fontFamily: 'Pretendard', fontSize: '12px' },
+  courseNameStyle: { color: '#1e40af', fontFamily: 'Pretendard', fontSize: '40px', fontWeight: 'bold' },
+  courseScheduleStyle: { color: '#0f172a', fontFamily: 'Pretendard', fontSize: '40px', fontWeight: 'bold' },
+  courseContentStyle: { color: '#0f172a', fontFamily: 'Pretendard', fontSize: '30px', fontWeight: 'bold' },
   qrTextStyle: { color: '#dc2626', fontFamily: 'Pretendard' },
   footerBrandStyle: { color: '#1e3a8a', fontFamily: 'Pretendard' },
 };
@@ -166,13 +166,19 @@ export default function App() {
           <div className="preview-tabs">
             <button 
               className={`tab-btn ${activeTab === 'schedule' ? 'active' : ''}`}
-              onClick={() => setActiveTab('schedule')}
+              onClick={() => {
+                setActiveTab('schedule');
+                setBasicInfo(prev => ({ ...prev, orientation: 'portrait' }));
+              }}
             >
               교육과정 안내표 (세로 권장)
             </button>
             <button 
               className={`tab-btn ${activeTab === 'calendar' ? 'active' : ''}`}
-              onClick={() => setActiveTab('calendar')}
+              onClick={() => {
+                setActiveTab('calendar');
+                setBasicInfo(prev => ({ ...prev, orientation: 'landscape' }));
+              }}
             >
               월간 캘린더 (가로 권장)
             </button>
