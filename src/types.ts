@@ -3,6 +3,7 @@ export interface TextStyle {
   fontFamily: string;
   backgroundColor?: string;
   fontSize?: string;
+  fontWeight?: string | number;
 }
 
 export interface Course {
