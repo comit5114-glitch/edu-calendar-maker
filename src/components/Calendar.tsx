@@ -67,12 +67,12 @@ export default function Calendar({ basicInfo, courses, holidays, setHolidays }: 
           </h1>
           
           <div style={{ display: 'flex', gap: '20px', marginTop: '60px', alignItems: 'center' }}>
-            {basicInfo.addressDetail && (
+            {(basicInfo.location || basicInfo.addressDetail) && (
               <div style={{ backgroundColor: '#1e40af', color: '#fff', padding: '16px 40px', borderRadius: '999px', fontSize: '38px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
                 <div style={{ backgroundColor: '#fff', color: '#1e40af', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <MapPin size={32} strokeWidth={3} />
                 </div>
-                영도구청 4층 정보화교육장
+                {basicInfo.location} {basicInfo.addressDetail ? `(${basicInfo.addressDetail})` : ''}
               </div>
             )}
             {basicInfo.time && (

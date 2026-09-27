@@ -66,7 +66,7 @@ export default function ScheduleTable({ basicInfo, courses }: ScheduleTableProps
               <div className="info-row">
                 <div className="info-label" style={basicInfo.infoLabelStyle}>교육장소</div>
                 <div className="info-value" style={basicInfo.infoValueStyle}>
-                  영도구청 4층 정보화교육장
+                  {basicInfo.location} {basicInfo.addressDetail ? `(${basicInfo.addressDetail})` : ''}
                 </div>
               </div>
               <div className="info-row">
